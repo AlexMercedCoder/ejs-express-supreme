@@ -16,7 +16,7 @@ const SECRET = process.env.SECRET || "secret"
 const HomeRouter = require("./routes/home.js");
 // Sessions Middleware
 const session = require("express-session"); // create session cookies
-const connect = require("connect-mongo")(session); // store cookies in mongo
+const connect = require("connect-mongodb-session")(session) // store cookies in mongo
 
 /////////////////////////////////////
 // Create Express Application Object
@@ -40,13 +40,17 @@ app.use(express.json()); // Parse json bodies
 app.use(express.urlencoded({ extended: false })); //parse bodies from form submissions
 // SESSION MIDDLEWARE REGISTRATION (adds req.session property)
 app.use(
-    session({
-      secret: SECRET,
-      saveUninitialized: false, // don't create session until something stored
-      resave: false, //don't save session if unmodified
-      store: new connect({ mongooseConnection: mongoose.connection }),
-    })
-  );
+  session({
+    secret: SECRET,
+    saveUninitialized: false, // don't create session until something stored
+    resave: false, //don't save session if unmodified
+    store: new connect({ 
+      url: process.env.MONGODB_URL,
+      databaseName: "sessions",
+      collection: "sessions"
+     }),
+  })
+);
 
 /////////////////////////////////////
 // Routes and Routers
