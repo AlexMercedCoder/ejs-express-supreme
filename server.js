@@ -42,13 +42,16 @@ app.use(express.urlencoded({ extended: false })); //parse bodies from form submi
 app.use(
   session({
     secret: SECRET,
-    saveUninitialized: false, // don't create session until something stored
-    resave: false, //don't save session if unmodified
-    store: new connect({ 
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    },
+    saveUninitialized: true, // create session regardless of changes
+    resave: true, //save regardless of changes
+    store: new connect({
       url: process.env.MONGODB_URL,
       databaseName: "sessions",
-      collection: "sessions"
-     }),
+      collection: "sessions",
+    }),
   })
 );
 
