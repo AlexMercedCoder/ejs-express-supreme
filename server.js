@@ -48,7 +48,7 @@ app.use(
     saveUninitialized: true, // create session regardless of changes
     resave: true, //save regardless of changes
     store: new connect({
-      url: process.env.MONGODB_URL,
+      uri: process.env.MONGODB_URL,
       databaseName: "sessions",
       collection: "sessions",
     }),
